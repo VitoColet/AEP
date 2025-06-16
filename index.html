@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reciclagem Eletrônica</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-image: linear-gradient(to left, #a9f3d4, #79dbb9);
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 30px;
+      background-color: #ffffffee;
+      border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    }
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    header h1 {
+      font-size: 2.2em;
+      color: #1e6b52;
+    }
+    header p {
+      font-size: 1.1em;
+      color: #345c4e;
+      margin-top: 10px;
+    }
+    .motivacional {
+      background-color: #e8fdf4;
+      padding: 15px;
+      border-left: 5px solid #27ae60;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      font-style: italic;
+      color: #276749;
+    }
+    label {
+      margin-top: 15px;
+      display: block;
+      font-weight: 600;
+    }
+    select, input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    #listaItens {
+      margin: 15px 0;
+      padding: 10px;
+      background-color: #f2f2f2;
+      border-radius: 8px;
+      list-style: none;
+    }
+    #listaItens li {
+      padding: 8px;
+      background-color: #d1fae5;
+      margin-bottom: 5px;
+      border-radius: 5px;
+    }
+    button {
+      padding: 12px 20px;
+      background-color: #27ae60;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    .oculto {
+      display: none;
+    }
+    ul#enderecos {
+      padding-left: 20px;
+    }
+    ul#enderecos li {
+      padding: 6px 0;
+    }
+    .agradecimento {
+      margin-top: 30px;
+      text-align: center;
+      background-color: #f0fff7;
+      padding: 20px;
+      border-radius: 10px;
+      color: #1a5e46;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <h1>Descarte Sustentável</h1>
+      <p>Ajude a transformar o mundo através da reciclagem de lixo eletrônico 🌍</p>
+    </header>
+
+    <div class="motivacional">
+      "Cada dispositivo descartado corretamente é um passo para um planeta mais verde. Junte-se a nós e faça parte da mudança! 💚"
+    </div>
+
+    <form id="formulario">
+      <label for="categoria">Categoria do resíduo eletrônico:</label>
+      <select id="categoria">
+        <option value="celulares">Celulares</option>
+        <option value="computadores">Computadores</option>
+        <option value="baterias">Baterias</option>
+        <option value="eletrodomesticos">Eletrodomésticos</option>
+      </select>
+
+      <label for="itens">Digite o nome do item e pressione Enter:</label>
+      <input type="text" id="itens" placeholder="Ex: notebook velho">
+
+      <ul id="listaItens"></ul>
+
+      <button type="button" id="gerarRelatorio">Gerar Relatório</button>
+    </form>
+
+    <div id="relatorio" class="oculto">
+      <h2>Relatório de Reciclagem</h2>
+      <p id="resumo"></p>
+      <h3>Pontos de Coleta</h3>
+      <ul id="enderecos"></ul>
+      <div class="agradecimento">
+        Obrigado por fazer sua parte! ♻️<br>
+        Seu gesto ajuda a preservar o meio ambiente para as futuras gerações.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const btn = document.getElementById('gerarRelatorio');
+    const relatorio = document.getElementById('relatorio');
+    const resumo = document.getElementById('resumo');
+    const enderecos = document.getElementById('enderecos');
+    const inputItem = document.getElementById('itens');
+    const listaItens = document.getElementById('listaItens');
+    const itensArray = [];
+
+    const locais = {
+      celulares: [
+        'Eco Ponto Central - Rua das Flores, 123',
+        'Loja VerdeTech - Av. Sustentável, 456'
+      ],
+      computadores: [
+        'Centro de Reciclagem TI - Rua do Silício, 789',
+        'Ponto Verde Informática - Av. dos Processadores, 321'
+      ],
+      baterias: [
+        'Supermercado Sustentável - Av. das Energias, 654',
+        'Baterias Ecológicas - Rua Corrente, 111'
+      ],
+      eletrodomesticos: [
+        'Depósito Recicla Tudo - Rua das Máquinas, 101',
+        'Eco Lar - Av. dos Eletros, 202'
+      ]
+    };
+
+    inputItem.addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const valor = inputItem.value.trim();
+        if (valor !== '') {
+          itensArray.push(valor);
+          const li = document.createElement('li');
+          li.textContent = valor;
+          listaItens.appendChild(li);
+          inputItem.value = '';
+        }
+      }
+    });
+
+    btn.addEventListener('click', () => {
+      const categoria = document.getElementById('categoria').value;
+
+      if (itensArray.length === 0) {
+        alert('Adicione pelo menos um item!');
+        return;
+      }
+
+      resumo.innerText = `Você deseja reciclar os seguintes itens: ${itensArray.join(', ')} (Categoria: ${categoria})`;
+      enderecos.innerHTML = '';
+
+      locais[categoria].forEach(local => {
+        const li = document.createElement('li');
+        li.textContent = local;
+        enderecos.appendChild(li);
+      });
+
+      relatorio.classList.remove('oculto');
+    });
+  </script>
+</body>
+
+</html>
